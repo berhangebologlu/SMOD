@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html title="Şehirler">
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title>Şehirler</title>
+</head>
+
+<body>
+    <h1>Şehir seçiniz</h1>
+    <button onclick="onWeather('istanbul')" type="button" class="btn btn-primary">İstanbul</button>
+    <button onclick="onWeather('ankara')" type="button" class="btn btn-warning">Ankara</button>
+    <button onclick="onWeather('izmir')" type="button" class="btn btn-info">İzmir</button>
+    <button onclick="onWeather('antalya')" type="button" class="btn btn-danger">Antalya</button>
+
+    <table id="idTable" style="display: none" class="table table-bordered">
+        <thead>
+            <tr>
+            </tr>
+        </thead>
+        <tbody id="idBody">
+        </tbody>
+    </table>
+</body>
+<script>
+    function onWeather(sCityName) {
+        var oRequest = {
+            params: {
+                city: sCityName
+            }
+        };
+        $.ajax({
+            url: "/api/forecast",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(oRequest),
+            success: function (res) {
+
+                function haftaninGunleriniAl(resDailyTime) {
+                    var tarih = new Date(resDailyTime);
+                    let gunler = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
+                    return gunler[tarih.getDay()];
+                    };
+
+                    $("#idTable").css("display", "block");
+                    // document.body.innerHTML = JSON.stringify(res);
+                    document.getElementById("idBody").innerHTML = "";
+
+                    var table = document.getElementById("idBody");
+                    var row2 = table.insertRow(0);  //temperature.max
+                    var row1 = table.insertRow(0);  //temperature.min
+                    var row3 = table.insertRow(0);  //weathercode
+                    var row4 = table.insertRow(0);  //weathercode
+
+                    var cell0 = row1.insertCell(0);
+                    var cell1 = row1.insertCell(1);
+                    var cell2 = row1.insertCell(2);
+                    var cell3 = row1.insertCell(3);
+                    var cell4 = row1.insertCell(4);
+                    var cell5 = row1.insertCell(5);
+                    var cell6 = row1.insertCell(6);
+                    var cell7 = row1.insertCell(7);
+
+                    var cell2_0 = row2.insertCell(0);
+                    var cell2_1 = row2.insertCell(1);
+                    var cell2_2 = row2.insertCell(2);
+                    var cell2_3 = row2.insertCell(3);
+                    var cell2_4 = row2.insertCell(4);
+                    var cell2_5 = row2.insertCell(5);
+                    var cell2_6 = row2.insertCell(6);
+                    var cell2_7 = row2.insertCell(7);
+
+                    var cell3_0 = row3.insertCell(0);
+                    var cell3_1 = row3.insertCell(1);
+                    var cell3_2 = row3.insertCell(2);
+                    var cell3_3 = row3.insertCell(3);
+                    var cell3_4 = row3.insertCell(4);
+                    var cell3_5 = row3.insertCell(5);
+                    var cell3_6 = row3.insertCell(6);
+                    var cell3_7 = row3.insertCell(7);
+
+                    var cell4_0 = row4.insertCell(0);
+                    var cell4_1 = row4.insertCell(1);
+                    var cell4_2 = row4.insertCell(2);
+                    var cell4_3 = row4.insertCell(3);
+                    var cell4_4 = row4.insertCell(4);
+                    var cell4_5 = row4.insertCell(5);
+                    var cell4_6 = row4.insertCell(6);
+                    var cell4_7 = row4.insertCell(7);
+                    
+
+                    cell0.innerHTML = '<b>En Yüksek</b>';
+                    cell1.innerHTML = res.daily.temperature_2m_max[0] + " °C";
+                    cell2.innerHTML = res.daily.temperature_2m_max[1] + " °C";
+                    cell3.innerHTML = res.daily.temperature_2m_max[2] + " °C";
+                    cell4.innerHTML = res.daily.temperature_2m_max[3] + " °C";
+                    cell5.innerHTML = res.daily.temperature_2m_max[4] + " °C";
+                    cell6.innerHTML = res.daily.temperature_2m_max[5] + " °C";
+                    cell7.innerHTML = res.daily.temperature_2m_max[6] + " °C";
+
+                    cell2_0.innerHTML = "<b>En Düşük</b>";
+                    cell2_1.innerHTML = res.daily.temperature_2m_min[0] + " °C";
+                    cell2_2.innerHTML = res.daily.temperature_2m_min[1] + " °C";
+                    cell2_3.innerHTML = res.daily.temperature_2m_min[2] + " °C";
+                    cell2_4.innerHTML = res.daily.temperature_2m_min[3] + " °C";
+                    cell2_5.innerHTML = res.daily.temperature_2m_min[4] + " °C";
+                    cell2_6.innerHTML = res.daily.temperature_2m_min[5] + " °C";
+                    cell2_7.innerHTML = res.daily.temperature_2m_min[6] + " °C";
+
+                    cell3_0.innerHTML = "<b>Durum</b>";
+                    cell3_1.innerHTML = getWeatherIcon(res.daily.weathercode[0]);
+                    cell3_2.innerHTML = getWeatherIcon(res.daily.weathercode[1]);
+                    cell3_3.innerHTML = getWeatherIcon(res.daily.weathercode[2]);
+                    cell3_4.innerHTML = getWeatherIcon(res.daily.weathercode[3]);
+                    cell3_5.innerHTML = getWeatherIcon(res.daily.weathercode[4]);
+                    cell3_6.innerHTML = getWeatherIcon(res.daily.weathercode[5]);
+                    cell3_7.innerHTML = getWeatherIcon(res.daily.weathercode[6]);
+                    
+                    cell4_0.innerHTML = "<b>Günler</b>";
+                    cell4_1.innerHTML = haftaninGunleriniAl(res.daily.time[0]);
+                    cell4_2.innerHTML = haftaninGunleriniAl(res.daily.time[1]);
+                    cell4_3.innerHTML = haftaninGunleriniAl(res.daily.time[2]);
+                    cell4_4.innerHTML = haftaninGunleriniAl(res.daily.time[3]);
+                    cell4_5.innerHTML = haftaninGunleriniAl(res.daily.time[4]);
+                    cell4_6.innerHTML = haftaninGunleriniAl(res.daily.time[5]);
+                    cell4_7.innerHTML = haftaninGunleriniAl(res.daily.time[6]);
+                },
+                error: function (e) {
+                },
+            });
+    };
+
+    function getWeatherIcon(sWeatherCode) {
+        switch (sWeatherCode) {
+            case 0:
+                return "&#x263C Güneşli"
+                break;
+            case 1:
+                return "&#x2600; Genel Olarak Açık"
+                break;
+            case 2:
+                return "&#x1F325 Parçalı Bulutlu"
+                break;
+            case 3:
+                return "&#x2601 Bulutlu"
+                break;
+            case 45 || 48:
+                return "&#x1F32B Sisli"
+                break;
+            case 51 || 53 || 55 || 56 || 57:
+                return "&#x1F326 Hafif Yağmurlu"
+                break;
+            case 61 || 63 || 65 || 66 || 67:
+                return "&#x1F327 Yağmurlu"
+                break;
+            case 71 || 73 || 75 || 77 || 85 || 86:
+                return " &#x1F328 Karlı"
+                break;
+            case 80 || 81 || 82 || 95 || 96 || 99:
+                return " &#x1F329 &#x2602 Sağanak Yağmurlu"
+                break;
+            default:
+                return ""
+        };
+    };
+    function getDayName(gün) {
+        switch (gün) {
+            case 1:
+                return "Pazartesi"
+                break;
+            case 2:
+                return "Salı"
+                break;
+            case 3:
+                return "Çarşamba"
+                break;
+            case 4:
+                return "Perşembe"
+                break;
+            case 5:
+                return "Cuma"
+                break;
+            case 6:
+                return "Cumartesi"
+                break;
+            case 7:
+                return "Pazar"
+                break;
+            case 8 || 9 || 10 || 11 || 12 || 13:
+                return
+        }
+    }
+</script>
+</html>
